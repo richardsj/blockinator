@@ -19,7 +19,7 @@ C{
 
 		if (!init) {
 			/* Open the SQLite DB */
-			if (sqlite3_open_v2(BLOCKLIST_DB, &db, SQLITE_OPEN_READONLY, NULL)) {
+			if (sqlite3_open_v2(BLOCKLIST_DB, &db, SQLITE_OPEN_READONLY, "unix-none")) {
 				syslog(LOG_ERR, "SQLite error (%s). Could not open database.", sqlite3_errmsg(db));
 			}
 			init = 1;

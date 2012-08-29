@@ -121,7 +121,7 @@ static void mod_blockinator_init_handler(apr_pool_t *p, server_rec *s)
     sprintf(sqlite3_instr_extension, "%s/sqlite_instr/instr.sqlext", cfg->basepath);
 
     /* Open the SQLite DB */
-    if (sqlite3_open_v2(cfg->db, &db, SQLITE_OPEN_READONLY, NULL)) {
+    if (sqlite3_open_v2(cfg->db, &db, SQLITE_OPEN_READONLY, "unix-none")) {
         /* Error. */
         ap_log_error(APLOG_MARK, APLOG_ERR, 0, s, "mod_blockinator: SQLite error (%s). Could not open database.", sqlite3_errmsg(db));
     }
