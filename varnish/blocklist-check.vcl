@@ -2,12 +2,10 @@ C{
 	remote_ip = VRT_IP_string(sp, VRT_r_client_ip(sp));
 	forwarded_ip = VRT_GetHdr(sp, HDR_REQ, "\020X-Forwarded-For:");
 	useragent = VRT_GetHdr(sp, HDR_REQ, "\013User-Agent:");
-	cookie = VRT_GetHdr(sp, HDR_REQ, "\007Cookie:");
 
 	char statement[BUFSIZ];
 	char *sqlite3_error;
 
-    char *safecookie = str_replace(cookie, "'", "''");
 
 	snprintf(statement, BUFSIZ, "SELECT COUNT(*), remote_ip FROM blocklist WHERE remote_ip = '%s' AND (forwarded_ip = 'ANY' OR forwarded_ip = '%s') AND (useragent = 'ANY' OR useragent = '%s')", remote_ip, forwarded_ip, useragent);
 
@@ -18,5 +16,4 @@ C{
 		syslog(LOG_INFO, "SQLite statment: %s", statement);
 		sqlite3_free(sqlite3_error);
 	}
-    free(safecookie);
 }C

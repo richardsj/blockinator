@@ -1,5 +1,4 @@
 C{
-	#define BLOCKINATOR_HOME	"/srv/app/blockinator"
 	#define BLOCKLIST_DB		"/srv/tmp/blocklist.db"
 
 	#include <stdio.h>
@@ -8,7 +7,7 @@ C{
 	#include <string.h>
 	#include <malloc.h>
 
-	char *remote_ip, *forwarded_ip, *useragent, *cookie;
+	char *remote_ip, *forwarded_ip, *useragent;
 
 	sqlite3 *db;
 
@@ -23,16 +22,6 @@ C{
 				syslog(LOG_ERR, "SQLite error (%s). Could not open database.", sqlite3_errmsg(db));
 			}
 			init = 1;
-
-			/* Load the EDSA SQLite extension for instr() */
-			if ((sqlite3_enable_load_extension(db, 1) != SQLITE_OK) ||
-				(sqlite3_load_extension(db, BLOCKINATOR_HOME"/sqlite_instr/instr.sqlext", 0, &sqlite3_error) != SQLITE_OK)
-			) {
-				syslog(LOG_ERR, "SQLite error (%s).  Failed to load the instr() extension.", sqlite3_error);
-				sqlite3_free(sqlite3_error);
-            } else {
-				syslog(LOG_INFO, "SQLite loaded the instr() extension successfully.");
-            }
 		}
 	}
 
@@ -48,32 +37,10 @@ C{
 		*/
 		if (argc > 0 && atoi(argv[0]) > 0 && strcmp(argv[1], remote_ip) == 0) {
 			/* Any results indicate a block */
-			syslog(LOG_INFO, "Blocklist match found for %s/%s. (Forwarded_IP: %s, User-Agent: %s, Cookie: %s)", remote_ip, argv[1], forwarded_ip, useragent, cookie);
+			syslog(LOG_INFO, "Blocklist match found for %s/%s. (Forwarded_IP: %s, User-Agent: %s)", remote_ip, argv[1], forwarded_ip, useragent);
 			VRT_SetHdr(sp, HDR_REQ, "\010X-Block:", remote_ip, vrt_magic_string_end);
 		}
 
 		return 0;
-	}
-
-	char *str_replace(char *input, char *search, char *replace)
-	{
-		char *string_ptr, *match_ptr;
-		int offset = strlen(search);
-
-        char *output = malloc(BUFSIZ);
-        memset(output, 0, BUFSIZ);
-
-		if (! input) return output;
-
-        string_ptr = input;
-
-		while (match_ptr = strstr(string_ptr, search)) {
-			strncat(output, string_ptr, match_ptr-string_ptr);
-			strcat(output, replace);
-			string_ptr = match_ptr + offset;
-		}
-		strcat(output, string_ptr);
-
-		return output;
 	}
 }C
