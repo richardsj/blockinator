@@ -23,6 +23,8 @@ class SQLiteBlockList(blocklist.BlockList):
              cur.execute("DELETE FROM blocklist")
 
              for key,item in self.data.iteritems():
+		 if item["useragent"] == 'NULL':
+			item["useragent"] = '(null)'
                  cur.execute("INSERT INTO blocklist VALUES ('%s', '%s', '%s', '%s')" % (item["remote_ip"], item["forwarded_ip"], item["useragent"], item["cookie"]))
              db.commit()
              cur.close()
