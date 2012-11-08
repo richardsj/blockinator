@@ -40,10 +40,16 @@ C{
 	{
 		char *sqlite3_error;
 
-		if (atoi(argv[0]) > 0) {
+		/* 
+			argv[0] - number of matches 
+			argv[1] - remote_ip from SQL statement
+	
+			Check that we have valid results and double check IP before blocking
+		*/
+		if (argc > 0 && atoi(argv[0]) > 0 && strcmp(argv[1], remote_ip) == 0) {
 			/* Any results indicate a block */
-			syslog(LOG_INFO, "Blocklist match found for %s. (Forwarded_IP: %s, User-Agent: %s, Cookie: %s)", remote_ip, forwarded_ip, useragent, cookie);
-			VRT_SetHdr(sp, HDR_REQ, "\010X-Block:", "1", vrt_magic_string_end);
+			syslog(LOG_INFO, "Blocklist match found for %s/%s. (Forwarded_IP: %s, User-Agent: %s, Cookie: %s)", remote_ip, argv[1], forwarded_ip, useragent, cookie);
+			VRT_SetHdr(sp, HDR_REQ, "\010X-Block:", remote_ip, vrt_magic_string_end);
 		}
 
 		return 0;

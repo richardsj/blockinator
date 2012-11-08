@@ -9,7 +9,7 @@ C{
 
     char *safecookie = str_replace(cookie, "'", "''");
 
-	snprintf(statement, BUFSIZ, "SELECT COUNT(*) FROM blocklist WHERE remote_ip = '%s' AND (forwarded_ip = 'ANY' OR forwarded_ip = '%s') AND (useragent = 'ANY' OR useragent = '%s') AND (cookie = 'ANY' OR instr('%s', cookie))", remote_ip, forwarded_ip, useragent, safecookie);
+	snprintf(statement, BUFSIZ, "SELECT COUNT(*), remote_ip FROM blocklist WHERE remote_ip = '%s' AND (forwarded_ip = 'ANY' OR forwarded_ip = '%s') AND (useragent = 'ANY' OR useragent = '%s')", remote_ip, forwarded_ip, useragent);
 
 	sqlite3_init();
 	if (sqlite3_exec(db, statement, resultHandler, sp, &sqlite3_error) != SQLITE_OK) {
