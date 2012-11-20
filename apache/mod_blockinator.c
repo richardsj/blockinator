@@ -57,7 +57,6 @@ static int mod_blockinator_method_handler(request_rec *r)
 {
     const char *remote_ip, *forwarded_ip, *useragent;
     char *statement;
-    char *sqlite3_error;
     sqlite3_stmt *sqlite3_statement;
     int sqlite3_rc;
 
@@ -94,10 +93,10 @@ static int mod_blockinator_method_handler(request_rec *r)
 
     /* Tidy-up the SQLite way. */
     if (sqlite3_finalize(sqlite3_statement) != SQLITE_OK) {
-        ap_log_rerror(APLOG_MARK, APLOG_WARNING, 0, r, "SQLite error freeing the SQLite compile statement (%s).  Possible memory leak.", sqlite3_error);
-        sqlite3_free(sqlite3_error);
+        ap_log_rerror(APLOG_MARK, APLOG_WARNING, 0, r, "SQLite error freeing the SQLite compile statement (%s).  Possible memory leak.", sqlite3_errmsg(db));
     }
 
+    sqlite3_free(statement);
     return DECLINED;
 }
 
@@ -106,8 +105,6 @@ static int mod_blockinator_method_handler(request_rec *r)
  */
 static void mod_blockinator_init_handler(apr_pool_t *p, server_rec *s)
 {
-    char *sqlite3_error;
-
     /* Read config from module */
     blockinator_cfg_t *cfg = ap_get_module_config(s->module_config, &blockinator_module);
 
