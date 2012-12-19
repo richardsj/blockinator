@@ -77,7 +77,7 @@ static int mod_blockinator_method_handler(request_rec *r)
     statement = sqlite3_mprintf("SELECT * FROM blocklist WHERE remote_ip = '%q' AND (forwarded_ip = 'ANY' OR forwarded_ip = '%q') AND (useragent = 'ANY' OR useragent = '%q')", remote_ip, forwarded_ip, useragent);
 
     /* Prepare the statement */
-    sqlite3_rc = sqlite3_prepare_v2(db, statement, BUFSIZ, &sqlite3_statement, NULL);
+    sqlite3_rc = sqlite3_prepare_v2(db, statement, -1, &sqlite3_statement, NULL);
     if (sqlite3_rc != SQLITE_OK) {
         /* SQLite error.  Allow. */
         ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, r, "SQLite error (%s).  Allow traffic from %s by default.", sqlite3_errmsg(db), remote_ip);
