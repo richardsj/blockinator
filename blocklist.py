@@ -68,9 +68,6 @@ class BlockList:
             raw_data = input_list.read()
             cache_file = open(cache_path, "w+")
             cache_file.write(raw_data)
-
-            # Rewind the file
-            cache_file.seek(0)
         except (urllib2.URLError, urllib2.HTTPError), error:
             # Network error.  Warn and use the cached content.
             logging.warning("Reverting to cache file.  There was a problem contacting host %s: %s", hostname, error)
@@ -86,8 +83,8 @@ class BlockList:
             cache_file = StringIO.StringIO()
             cache_file.write(raw_data)
 
-            # Rewind the file
-            cache_file.seek(0)
+        # Rewind the file
+        cache_file.seek(0)
 
         # Return the best available data
         return cache_file
