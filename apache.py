@@ -1,5 +1,6 @@
-#!/usr/bin/python 
-"""Script to create a simple mod_access style list for inclusion within Apache."""
+#!/usr/bin/python
+"""Script to create a simple mod_access style list for inclusion
+within Apache."""
 
 import blocklist
 import sys
