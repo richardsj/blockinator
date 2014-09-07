@@ -1,11 +1,12 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 """Script to create a ACL file for inclusion within Varnish."""
 
 import blocklist
 import sys
 
 class VarnishBlockList(blocklist.BlockList):
-    """New class to extend the main BlockList class for implementation with Varnish."""
+    """New class to extend the main BlockList class for
+       implementation with Varnish."""
     def export(self):
         """Exports blocklist addresses for use within Varnish."""
         print "acl block_list {"
