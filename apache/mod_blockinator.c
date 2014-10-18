@@ -61,7 +61,7 @@ static int mod_blockinator_method_handler(request_rec *r)
     int sqlite3_rc;
 
     /* Capture the relevant information from the inbound request */
-    remote_ip = r->connection->remote_ip;
+    remote_ip = r->connection->client_ip;
     forwarded_ip = apr_table_get(r->headers_in, "X-Forwarded-For");
     useragent = apr_table_get(r->headers_in, "User-Agent");
 
