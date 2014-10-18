@@ -1,5 +1,5 @@
 /*
- * mod_blockinator for Apache v2.2
+ * mod_blockinator for Apache v2.4
  *
  * Author: Scott Wallace <scott@suborbit.com>
  *   Date: March 2012
@@ -20,6 +20,10 @@
 #include <sqlite3.h>
 
 module AP_MODULE_DECLARE_DATA blockinator_module;
+
+#ifdef APLOG_USE_MODULE
+APLOG_USE_MODULE(blockinator);
+#endif
 
 /*
  * Global variables for use everywhere
