@@ -1,5 +1,5 @@
 /*
- * mod_blockinator for Apache v2.4
+ * mod_blockinator for Apache v2.2+
  *
  * Author: Scott Wallace <scott@suborbit.com>
  *   Date: March 2012
