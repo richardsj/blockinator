@@ -43,6 +43,8 @@ APACHE_DIR
 # The AC_SUBST macro causes the variable to be saved in config.status
 AC_SUBST(apache_dir)
 
+AC_CHECK_MEMBER(conn_rec.client_ip, AC_DEFINE(USE_CONN_REC_CLIENT_IP,1,[Do we have conn_rec.client_ip]),,[#include "httpd.h"])
+
 # Write config.status and the Makefile
 AC_OUTPUT(Makefile)
 
