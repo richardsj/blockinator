@@ -1,5 +1,5 @@
 /*
- * mod_blockinator for Apache v2.2
+ * mod_blockinator for Apache v2.4
  *
  * Author: Scott Wallace <scott@suborbit.com>
  *   Date: March 2012
@@ -20,6 +20,10 @@
 #include <sqlite3.h>
 
 module AP_MODULE_DECLARE_DATA blockinator_module;
+
+#ifdef APLOG_USE_MODULE
+APLOG_USE_MODULE(blockinator);
+#endif
 
 /*
  * Global variables for use everywhere
@@ -61,7 +65,11 @@ static int mod_blockinator_method_handler(request_rec *r)
     int sqlite3_rc;
 
     /* Capture the relevant information from the inbound request */
-    remote_ip = r->connection->remote_ip;
+#ifdef USE_CONN_REC_CLIENT_IP
+    remote_ip = r->connection->client_ip,
+#else
+    remote_ip = r->connection->remote_ip,
+#endif
     forwarded_ip = apr_table_get(r->headers_in, "X-Forwarded-For");
     useragent = apr_table_get(r->headers_in, "User-Agent");
 
